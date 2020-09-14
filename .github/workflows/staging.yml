@@ -22,5 +22,5 @@ jobs:
           releaseDirectory: build/app/outputs/bundle/stagingRelease
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
+          keyStorePassword: ${{ secrets.KEY_PASS }}
+          keyPassword: ${{ secrets.KEY_PASS }}
