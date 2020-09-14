@@ -20,7 +20,7 @@ platform :android do
   lane :staging_internal do
     upload_to_play_store(
        track: "internal",
-       aab: ENV["SIGNED_RELEASE_FILE"]
+       aab: ../ENV["SIGNED_RELEASE_FILE"]
     )
   end
 end
