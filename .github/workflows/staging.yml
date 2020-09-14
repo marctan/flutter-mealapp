@@ -24,3 +24,8 @@ jobs:
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_PASS }}
           keyPassword: ${{ secrets.KEY_PASS }}
+
+      - name: Decode json api key and save to a file
+        env: 
+          JSON_KEY: ${{ secrets.JSON_KEY }}
+      - run: echo "$JSON_KEY" | base64 --decode > ${HOME}/apikey.json
