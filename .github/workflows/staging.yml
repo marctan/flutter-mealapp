@@ -28,7 +28,7 @@ jobs:
       - name: Decode json api key and save to a file
         env: 
           JSON_KEY: ${{ secrets.JSON_KEY }}
-        run: echo "$JSON_KEY" | base64 --decode > ${HOME}/apikey.json
+        run: echo "$JSON_KEY" | base64 --decode > apikey.json
       - name: Deploy in Internal Test Track to playstore via Fastlane
         uses: maierj/fastlane-action@v1.4.0
         with:
@@ -37,4 +37,4 @@ jobs:
         env:
           SIGNED_RELEASE_FILE: ${{ steps.sign-android-app.outputs.signedReleaseFile }}
           APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_STAGING }}
-          JSON_KEY_PATH: ${HOME}/apikey.json
+          JSON_KEY_PATH: apikey.json
