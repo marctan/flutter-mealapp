@@ -1,0 +1,41 @@
+name: Production Test Dart
+
+on:
+  push:
+    branches: [ workflowtest ]
+
+jobs:
+  deploy_android:
+    name: Deploy to Playstore Production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run Flutter tasks
+        uses: subosito/flutter-action@v1.3.2
+      - run: flutter pub get
+      - run: flutter build appbundle --flavor production
+      - name: Sign the app
+        id: sign-android-app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: build/app/outputs/bundle/productionRelease
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_PASS }}
+          keyPassword: ${{ secrets.KEY_PASS }}
+
+      - name: Decode json api key and save to a file
+        env: 
+          JSON_KEY: ${{ secrets.JSON_KEY }}
+        run: echo "$JSON_KEY" | base64 --decode > apikey.json
+      - name: Deploy in Production Track to playstore via Fastlane
+        uses: maierj/fastlane-action@v1.4.0
+        with:
+          lane: deploy_production
+          subdirectory: android
+        env:
+          SIGNED_RELEASE_FILE: ${{ steps.sign-android-app.outputs.signedReleaseFile }}
+          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_PROD }}
+          JSON_KEY_PATH: apikey.json
+

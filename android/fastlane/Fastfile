@@ -23,4 +23,12 @@ platform :android do
        aab: "../%s" % ENV["SIGNED_RELEASE_FILE"]
     )
   end
+
+  desc "Deploy into production track to the Google Play"
+  lane :deploy_production do
+    upload_to_play_store(
+       track: "production",
+       aab: "../%s" % ENV["SIGNED_RELEASE_FILE"]
+    )
+  end
 end
