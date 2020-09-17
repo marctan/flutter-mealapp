@@ -2,7 +2,7 @@ name: Production Test Dart
 
 on:
   push:
-    branches: [ workflowtest ]
+    branches: [ _workflowtest ]
 
 jobs:
   deploy_android:
