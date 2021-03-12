@@ -1,0 +1,44 @@
+name: Test CI Dart
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy_android:
+    name: Deploy to Playstore internal test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run Flutter tasks
+        uses: subosito/flutter-action@v1.4.0
+      - run: flutter pub get
+      - run: flutter build appbundle --flavor staging
+      - name: Sign the app
+        id: sign-android-app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: build/app/outputs/bundle/stagingRelease
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+      - name: Decode json api key and save to a file
+        env: 
+          JSON_KEY: ${{ secrets.JSON_KEY }}
+        run: echo "$JSON_KEY" | base64 --decode > ${HOME}/apikey.json
+      - name: Ruby Setup for Fastlane
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+      - name: Deploy Internal Test to playstore via Fastlane
+        uses: maierj/fastlane-action@v1.4.0
+        with:
+          lane: staging_internal
+          subdirectory: android
+        env:
+          SIGNED_RELEASE_FILE: ${{ steps.sign-android-app.outputs.signedReleaseFile }}
+          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_STAGING }}
+          JSON_KEY_PATH: ${HOME}/apikey.json
+          
