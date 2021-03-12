@@ -41,3 +41,4 @@ jobs:
           SIGNED_RELEASE_FILE: ${{ steps.sign-android-app.outputs.signedReleaseFile }}
           APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_STAGING }}
           JSON_KEY_PATH: ${HOME}/apikey.json
+          
