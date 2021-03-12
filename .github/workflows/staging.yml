@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Run Flutter tasks
-        uses: subosito/flutter-action@v1.3.2
+        uses: subosito/flutter-action@v1.4.0
       - run: flutter pub get
       - run: flutter build appbundle --flavor staging
       - name: Sign the app
@@ -28,6 +28,10 @@ jobs:
         env: 
           JSON_KEY: ${{ secrets.JSON_KEY }}
       - run: echo "$JSON_KEY" | base64 --decode > ${HOME}/apikey.json
+      - name: Ruby Setup for Fastlane
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
       - name: Deploy Internal Test to playstore via Fastlane
         uses: maierj/fastlane-action@v1.4.0
         with:
