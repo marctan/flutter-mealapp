@@ -28,10 +28,6 @@ jobs:
         env: 
           JSON_KEY: ${{ secrets.JSON_KEY }}
       - run: echo "$JSON_KEY" | base64 --decode > ${HOME}/apikey.json
-      - name: Ruby Setup for Fastlane
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: '2.7'
       - name: Deploy Internal Test to playstore via Fastlane
         uses: maierj/fastlane-action@v1.4.0
         with:
@@ -41,4 +37,3 @@ jobs:
           SIGNED_RELEASE_FILE: ${{ steps.sign-android-app.outputs.signedReleaseFile }}
           APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_STAGING }}
           JSON_KEY_PATH: ${HOME}/apikey.json
-          
